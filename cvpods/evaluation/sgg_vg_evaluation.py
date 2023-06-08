@@ -363,8 +363,6 @@ class VisualGenomeSGGEvaluator(DatasetEvaluator):
                 coco_summary = redirect_string.getvalue()
 
                 logger.info(f"\n{coco_summary}")
-                print(self._metadata.ind_to_classes[:-1])
-                asd
 
                 res = self._derive_coco_results(
                     coco_eval, "bbox", redirect_string,
@@ -627,7 +625,7 @@ def classic_vg_sgg_evaluation(
 
     # calculate mean recall
     eval_mean_recall.calculate_mean_recall(mode)
-    eval_ng_mean_recall.calculate_mean_recall(mode)
+#    eval_ng_mean_recall.calculate_mean_recall(mode)
 
 
     def generate_eval_res_dict(evaluator, mode):
