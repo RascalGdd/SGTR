@@ -363,6 +363,8 @@ class VisualGenomeSGGEvaluator(DatasetEvaluator):
                 coco_summary = redirect_string.getvalue()
 
                 logger.info(f"\n{coco_summary}")
+                print(self._metadata.ind_to_classes[:-1])
+                asd
 
                 res = self._derive_coco_results(
                     coco_eval, "bbox", redirect_string,
