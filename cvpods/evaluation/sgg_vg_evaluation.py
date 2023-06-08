@@ -371,6 +371,7 @@ class VisualGenomeSGGEvaluator(DatasetEvaluator):
                 self._results["bbox"] = res
 
         if 'relation' in eval_types:
+            asd
             predicates_categories = self._metadata.ind_to_predicates
             _, vg_sgg_eval_res = classic_vg_sgg_evaluation(self.cfg,
                                                            predictions,
@@ -625,7 +626,7 @@ def classic_vg_sgg_evaluation(
 
     # calculate mean recall
     eval_mean_recall.calculate_mean_recall(mode)
-#    eval_ng_mean_recall.calculate_mean_recall(mode)
+    eval_ng_mean_recall.calculate_mean_recall(mode)
 
 
     def generate_eval_res_dict(evaluator, mode):
