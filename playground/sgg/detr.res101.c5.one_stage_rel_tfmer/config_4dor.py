@@ -41,7 +41,7 @@ _config_dict = dict(
         WEIGHTS="/cluster/work/cvl/denfan/diandian/SGTR/weights_backbone/detr_oiv6.pth",
 
         # TEST_WEIGHTS="/home/allen/MI-projects/SGTR/weights_test/sgtr_oiv6_new/model_0107999.pth",
-        TEST_WEIGHTS="",
+        TEST_WEIGHTS="/cluster/work/cvl/denfan/diandian/SGTR/CVPODS_output/2023-06-08_18-43-4dor-SGTR-rel_dec-6/model_0009999.pth",
 
         RESNETS=dict(
             DEPTH=101,
@@ -235,7 +235,7 @@ _config_dict = dict(
         CHECKPOINT_PERIOD=5000,
     ),
     TEST=dict(
-        EVAL_PERIOD=3000,
+        EVAL_PERIOD=100,
         RELATION=dict(MULTIPLE_PREDS=False, IOU_THRESHOLD=0.5, EVAL_POST_PROC=True, ),
     ),
     # OUTPUT_DIR=curr_folder.replace(
