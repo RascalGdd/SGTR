@@ -525,7 +525,7 @@ def classic_vg_sgg_evaluation(
 ):
     # get zeroshot triplet
     zeroshot_triplet = torch.load(
-        "/home/allen/datasets/Visual_Genome/vg_motif_anno/zeroshot_triplet.pytorch",
+        "/your/project/dir/sgtr_release/datasets/vg/vg_motif_anno/zeroshot_triplet.pytorch",
         map_location=torch.device("cpu")).long().numpy()
 
     attribute_on = False

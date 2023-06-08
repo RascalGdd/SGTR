@@ -2,4 +2,4 @@
 
 export OMP_NUM_THREADS=1
 
-python3 /home/allen/MI-projects/SGTR/tools/train_net.py $@
+python3 /cluster/work/cvl/denfan/diandian/SGTR/tools/train_net.py $@
