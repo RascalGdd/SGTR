@@ -38,7 +38,7 @@ _config_dict = dict(
         ],
 
         # detection pretrain weights
-        WEIGHTS="/home/allen/MI-projects/SGTR/weights_backbone/detr_oiv6.pth",
+        WEIGHTS="/cluster/work/cvl/denfan/diandian/SGTR/weights_backbone/detr_oiv6.pth",
 
         # TEST_WEIGHTS="/home/allen/MI-projects/SGTR/weights_test/sgtr_oiv6_new/model_0107999.pth",
         TEST_WEIGHTS="",
@@ -241,7 +241,7 @@ _config_dict = dict(
     # OUTPUT_DIR=curr_folder.replace(
     #     cvpods_home, os.getenv("CVPODS_OUTPUT")
     # ),
-    OUTPUT_DIR="/home/allen/MI-projects/SGTR/CVPODS_output",
+    OUTPUT_DIR="/cluster/work/cvl/denfan/diandian/SGTR/CVPODS_output",
     GLOBAL=dict(
         DUMP_TEST=True,
         LOG_INTERVAL=100,
