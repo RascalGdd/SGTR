@@ -615,13 +615,15 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
 
         if len(rec) == 0:
             rec = [0.0]
+        if len(prec) == 0:
+            prec = [0.0]
 
         weighted_ap = ap * float(npos[c]) / float(all_npos)
         w_rel_mAP += weighted_ap
         rel_mAP += ap
         ap_str += '{:.2f}, '.format(100 * ap)
         per_class_res += '{}: {:.3f} / {:.3f} / {:.3f} ({:.6f}:{}/{}), '.format(
-            predicate_cls_list_woBG[c], 100 * ap, 100 * prec, rec[-1] * 100, float(npos[c]) / float(all_npos),
+            predicate_cls_list_woBG[c], 100 * ap, 100 * prec[-1], rec[-1] * 100, float(npos[c]) / float(all_npos),
             npos[c], all_npos)
 
     rel_mAP /= len(predicate_cls_list_woBG)
