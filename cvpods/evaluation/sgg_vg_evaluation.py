@@ -624,8 +624,8 @@ def classic_vg_sgg_evaluation(
             indexing_acc_res_str += f'{k}: {np.mean(v):.3f}\n'
 
     # calculate mean recall
-    asd
     eval_mean_recall.calculate_mean_recall(mode)
+    asd
     eval_ng_mean_recall.calculate_mean_recall(mode)
 
 
