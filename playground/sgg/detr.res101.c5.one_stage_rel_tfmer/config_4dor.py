@@ -235,7 +235,7 @@ _config_dict = dict(
         CHECKPOINT_PERIOD=5000,
     ),
     TEST=dict(
-        EVAL_PERIOD=10,
+        EVAL_PERIOD=100,
         RELATION=dict(MULTIPLE_PREDS=False, IOU_THRESHOLD=0.5, EVAL_POST_PROC=True, ),
     ),
     # OUTPUT_DIR=curr_folder.replace(
