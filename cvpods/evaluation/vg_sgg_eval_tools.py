@@ -548,7 +548,7 @@ class SGMeanRecall(SceneGraphEvaluation):
                 sum_recall += tmp_recall
 
             self.result_dict[mode + "_mean_recall"][k] = sum_recall / float(num_rel_no_bg)
-            print(self.result_dict)
+            print(self.result_dict.keys())
             asd
         return
 
