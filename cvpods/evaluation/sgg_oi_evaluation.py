@@ -604,8 +604,8 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
     empty_cate = ''
     for c in tqdm(range(len(predicate_cls_list_woBG))):
         rec, prec, ap = ap_eval(cls_image_ids[c], cls_dets[c], cls_gts[c], npos[c], True)
-        print(type(rec))
-        print(type(prec))
+        print(type(rec.shape))
+        print(type(prec.shape))
 
         if ap is None:
             empty_cate += f"{c}-{predicate_cls_list_woBG[c]}, "
