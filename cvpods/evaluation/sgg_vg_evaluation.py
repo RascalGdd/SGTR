@@ -625,7 +625,6 @@ def classic_vg_sgg_evaluation(
 
     # calculate mean recall
     eval_mean_recall.calculate_mean_recall(mode)
-    asd
     eval_ng_mean_recall.calculate_mean_recall(mode)
 
 
