@@ -617,13 +617,13 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
         rel_mAP += ap
         ap_str += '{:.2f}, '.format(100 * ap)
         per_class_res += '{}: {:.3f} / {:.3f} / {:.3f} ({:.6f}:{}/{}), '.format(
-            predicate_cls_list_woBG[c], 100 * ap, 100 * weighted_ap, rec[-1] * 100, float(npos[c]) / float(all_npos),
+            predicate_cls_list_woBG[c], 100 * ap, 100 * prec[-1], rec[-1] * 100, float(npos[c]) / float(all_npos),
             npos[c], all_npos)
 
     rel_mAP /= len(predicate_cls_list_woBG)
     print("Not gt instance in categories: ", empty_cate)
     result_str += '\nrel mAP: {:.2f}, weighted rel mAP: {:.2f}\n'.format(100 * rel_mAP, 100 * w_rel_mAP)
-    result_str += 'rel AP perclass: AP/ weighted-AP / recall (weight-total_fg_propotion)\n'
+    result_str += 'rel AP perclass: AP/ precision / recall (weight-total_fg_propotion)\n'
     result_str += per_class_res + "\n\n"
     phr_mAP = 0.
     w_phr_mAP = 0.
