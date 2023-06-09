@@ -606,6 +606,8 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
         rec, prec, ap = ap_eval(cls_image_ids[c], cls_dets[c], cls_gts[c], npos[c], True)
         print(type(rec.shape))
         print(type(prec.shape))
+        print(rec)
+        print(prec)
 
         if ap is None:
             empty_cate += f"{c}-{predicate_cls_list_woBG[c]}, "
