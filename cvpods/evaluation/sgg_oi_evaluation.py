@@ -584,6 +584,9 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
                                   gt_labels_prd=gt_labels_prd))
 
     predicate_cls_list_woBG = predicate_cls_list[1:]  # remove the background categoires
+    print("predicate_cls_list", len(predicate_cls_list))
+    print("predicate_cls_list_woBG", len(predicate_cls_list_woBG))
+    asd
     for k in recalls_per_img.keys():
         recalls_per_img[k] = np.mean(recalls_per_img[k])
 
