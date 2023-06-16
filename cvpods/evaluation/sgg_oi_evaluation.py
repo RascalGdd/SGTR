@@ -427,6 +427,8 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
 
     topk_dets = []
     for im_i, res in enumerate(tqdm(all_results)):
+        print(res.keys())
+        asd
 
         # in oi_all_rel some images have no dets
         if res['prd_scores_dist'] is None:
