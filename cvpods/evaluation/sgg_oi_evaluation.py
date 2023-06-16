@@ -429,7 +429,7 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
     for im_i, res in enumerate(tqdm(all_results)):
         for i in ['sbj_boxes', 'sbj_labels', 'sbj_scores', 'obj_boxes', 'obj_labels', 'obj_scores', 'prd_scores_dist', 'prd_trp_score', 'prd_rel_label', 'prd_rel_score', 'pred_rel_pair_idxs', 'gt_sbj_boxes', 'gt_obj_boxes', 'gt_sbj_labels', 'gt_obj_labels', 'gt_prd_labels']:
             print(i+".shape")
-            if res[i]:
+            if res[i] != None:
                 print(res[i].shape)
             else:
                 print("None")
