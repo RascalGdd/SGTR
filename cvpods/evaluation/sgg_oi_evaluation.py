@@ -429,7 +429,7 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
     for im_i, res in enumerate(tqdm(all_results)):
         for i in ['sbj_boxes', 'sbj_labels', 'sbj_scores', 'obj_boxes', 'obj_labels', 'obj_scores', 'prd_scores_dist', 'prd_trp_score', 'prd_rel_label', 'prd_rel_score', 'pred_rel_pair_idxs', 'gt_sbj_boxes', 'gt_obj_boxes', 'gt_sbj_labels', 'gt_obj_labels', 'gt_prd_labels']:
             print(i+".shape")
-            print("None")
+            print(res[i].shape)
 
         # in oi_all_rel some images have no dets
         if res['prd_scores_dist'] is None:
@@ -566,6 +566,8 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
         for k in recalls_per_img:
             if len(pred_to_gt):
                 match = reduce(np.union1d, pred_to_gt[:k])
+                print("match")
+                print(match.shape)
             else:
                 match = []
             rec_i = float(len(match)) / float(gt_labels_spo.shape[0] + 1e-12)  # in case there is no gt
