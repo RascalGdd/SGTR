@@ -567,7 +567,7 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
             if len(pred_to_gt):
                 match = reduce(np.union1d, pred_to_gt[:k])
                 print("match")
-                print(match.shape)
+                print(len(match))
             else:
                 match = []
             rec_i = float(len(match)) / float(gt_labels_spo.shape[0] + 1e-12)  # in case there is no gt
