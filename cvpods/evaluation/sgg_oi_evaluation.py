@@ -400,7 +400,7 @@ class OpenImageSGGEvaluator(VisualGenomeSGGEvaluator):
 def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_proc=True):
     logger.info('openimage evaluation: \n')
 
-    topk = 100
+    topk = 500
 
     # if cfg.TEST.DATASETS[0].find('vg') >= 0:
     #     eval_per_img = True
@@ -427,9 +427,6 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
 
     topk_dets = []
     for im_i, res in enumerate(tqdm(all_results)):
-        for i in ['sbj_boxes', 'sbj_labels', 'sbj_scores', 'obj_boxes', 'obj_labels', 'obj_scores', 'prd_scores_dist', 'prd_trp_score', 'prd_rel_label', 'prd_rel_score', 'pred_rel_pair_idxs', 'gt_sbj_boxes', 'gt_obj_boxes', 'gt_sbj_labels', 'gt_obj_labels', 'gt_prd_labels']:
-            print(i+".shape")
-            print(res[i].shape)
 
         # in oi_all_rel some images have no dets
         if res['prd_scores_dist'] is None:
@@ -566,8 +563,6 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
         for k in recalls_per_img:
             if len(pred_to_gt):
                 match = reduce(np.union1d, pred_to_gt[:k])
-                print("match")
-                print(len(match))
             else:
                 match = []
             rec_i = float(len(match)) / float(gt_labels_spo.shape[0] + 1e-12)  # in case there is no gt
@@ -638,7 +633,7 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
 
     per_class_res = ''
     for c in range(len(predicate_cls_list_woBG)):
-        rec, prec, ap = ap_eval(cls_image_ids[c], cls_dets[c], cls_gts[c], npos[c], False)
+        rec, prec, ap = ap_eval(cls_image_ids[c], cls_dets[c], cls_gts[c], npos[c], False, ovthresh=0)
 
         if ap is None:
             continue
