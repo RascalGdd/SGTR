@@ -639,18 +639,20 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
             continue
         if len(rec) == 0:
             rec = [0.0]
+        if len(prec) == 0:
+            prec = [0.0]
 
         weighted_ap = ap * float(npos[c]) / float(all_npos)
         w_phr_mAP += weighted_ap
         phr_mAP += ap
         ap_str += '{:.2f}, '.format(100 * ap)
-        per_class_res += '{}: {:.3f} / {:.3f} / {:.3f} ({:.6f}:{}/{}), '.format(
-            predicate_cls_list_woBG[c], 100 * ap, 100 * weighted_ap, rec[-1] * 100, float(npos[c]) / float(all_npos),
+        per_class_res += '{}: {:.3f} / {:.3f} / {:.3f} / {:.3f} ({:.6f}:{}/{}), '.format(
+            predicate_cls_list_woBG[c], 100 * ap, 100 * weighted_ap, prec[-1] * 100, rec[-1] * 100, float(npos[c]) / float(all_npos),
             npos[c], all_npos)
 
     phr_mAP /= len(predicate_cls_list_woBG)
     result_str += '\nphr mAP: {:.2f}, weighted phr mAP: {:.2f}\n'.format(100 * phr_mAP, 100 * w_phr_mAP)
-    result_str += 'rel AP perclass: AP/ weighted-AP / recall (weight-total_fg_propotion)\n'
+    result_str += 'rel AP perclass: AP/ weighted-AP /precision / recall (weight-total_fg_propotion)\n'
     result_str += per_class_res + "\n\n"
 
     # total: 0.4 x rel_mAP + 0.2 x R@50 + 0.4 x phr_mAP
