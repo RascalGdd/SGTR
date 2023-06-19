@@ -417,7 +417,7 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
 
     # here we only takes the evaluation option of openimages
     if post_proc:
-        prd_k = 5
+        prd_k = 6
     else:
         prd_k = 1
 
@@ -459,7 +459,7 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
             rel_trp_prd_scores = res['prd_trp_score']
             # pred_rel_pair_idxs = res['pred_rel_pair_idxs']
             
-            print("11111111", len(res['prd_scores_dist']))
+            #print("11111111", len(res['prd_scores_dist']))
 
             if post_proc:
                 # take out the predicates classification score
@@ -635,7 +635,7 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
 
     per_class_res = ''
     for c in range(len(predicate_cls_list_woBG)):
-        rec, prec, ap = ap_eval(cls_image_ids[c], cls_dets[c], cls_gts[c], npos[c], False, ovthresh=0.01)
+        rec, prec, ap = ap_eval(cls_image_ids[c], cls_dets[c], cls_gts[c], npos[c], False, ovthresh=0)
 
         if ap is None:
             continue
@@ -906,6 +906,7 @@ def ap_eval(image_ids,
             #print(valid_mask.any())
             if valid_mask.any():
                 jmax = np.where(valid_mask==True)[0]
+                print(jmax)
                 assert len(jmax) == 1
                 jmax = jmax[0]
             
@@ -927,7 +928,6 @@ def ap_eval(image_ids,
             # fp.append(1.)
             # tp.append(0.)
                 fp[rank_idx] = 1.
-                tp[rank_idx] = 0.
                 y_test[rank_idx] = 0
 
     # add missed_gt
