@@ -197,7 +197,7 @@ _config_dict = dict(
             ],
             TEST_PIPELINES=[
                 ("ResizeShortestEdge",
-                 dict(short_edge_length=456, max_size=456, sample_style="choice")),
+                 dict(short_edge_length=456, max_size=800, sample_style="choice")),
             ],
         )
     ),
