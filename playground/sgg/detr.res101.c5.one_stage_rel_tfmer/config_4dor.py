@@ -125,7 +125,7 @@ _config_dict = dict(
 
             AUX_LOSS_WEIGHT=aux_loss_weight,
 
-            NUM_QUERIES=40,   # 180    4D-OR has less number of objects
+            NUM_QUERIES=60,   # 180    4D-OR has less number of objects
 
             COST_CLASS=1.0,
             COST_REL_VEC=1.0,
@@ -192,7 +192,7 @@ _config_dict = dict(
                 # ("RandomFlip", dict()),
                 ("ResizeShortestEdge", dict(
                     short_edge_length=[456],
-                    max_size=456, sample_style="choice")),
+                    max_size=800, sample_style="choice")),
                 ("RandomFlip", dict()),
             ],
             TEST_PIPELINES=[
@@ -212,9 +212,9 @@ _config_dict = dict(
             NAME="WarmupMultiStepLR",
             GAMMA=0.1,
             MAX_EPOCH=None,
-            MAX_ITER=26000,     # 4d-or train_num:4024, 4024/4=503     503*50=25150  ==> 26000
-            WARMUP_ITERS=300,
-            STEPS=(5000, 12000),
+            MAX_ITER=52000,     # 4d-or train_num:4024, 4024/4=503     503*50=25150  ==> 26000
+            WARMUP_ITERS=600,
+            STEPS=(10000, 24000),
         ),
         OPTIMIZER=dict(
             NAME="DETRAdamWBuilder",
@@ -230,12 +230,12 @@ _config_dict = dict(
         ),
         # IMS_PER_BATCH=24,  # 四卡时候的batchsize
         # IMS_PER_DEVICE=6,
-        IMS_PER_BATCH=8,  # 2卡时候的batchsize
+        IMS_PER_BATCH=16,  # 2卡时候的batchsize
         IMS_PER_DEVICE=4,
         CHECKPOINT_PERIOD=5000,
     ),
     TEST=dict(
-        EVAL_PERIOD=100,
+        EVAL_PERIOD=3000,
         RELATION=dict(MULTIPLE_PREDS=False, IOU_THRESHOLD=0.5, EVAL_POST_PROC=True, ),
     ),
     # OUTPUT_DIR=curr_folder.replace(
