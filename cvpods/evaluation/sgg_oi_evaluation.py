@@ -417,7 +417,7 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
 
     # here we only takes the evaluation option of openimages
     if post_proc:
-        prd_k = 2
+        prd_k = 5
     else:
         prd_k = 1
 
@@ -458,6 +458,8 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
             rel_prd_score = res['prd_rel_score']
             rel_trp_prd_scores = res['prd_trp_score']
             # pred_rel_pair_idxs = res['pred_rel_pair_idxs']
+            
+            print("11111111", len(res['prd_scores_dist']))
 
             if post_proc:
                 # take out the predicates classification score
@@ -633,7 +635,7 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
 
     per_class_res = ''
     for c in range(len(predicate_cls_list_woBG)):
-        rec, prec, ap = ap_eval(cls_image_ids[c], cls_dets[c], cls_gts[c], npos[c], False, ovthresh=0)
+        rec, prec, ap = ap_eval(cls_image_ids[c], cls_dets[c], cls_gts[c], npos[c], False, ovthresh=0.01)
 
         if ap is None:
             continue
@@ -873,6 +875,7 @@ def ap_eval(image_ids,
 
     tp = np.zeros(num_detection)
     fp = np.zeros(num_detection)
+    tp_recall = np.zeros(num_detection)
 
     # mark the gt whether hit by other prediciton
     gt_hit_book = {k: [False] * v['gt_num'] for k, v in gts.items()}
@@ -897,46 +900,35 @@ def ap_eval(image_ids,
         LBLGT_o = gt_rel['gt_labels_obj']
         if BBGT_s.size > 0:
             valid_mask = np.logical_and(LBLGT_s == lbl_s, LBLGT_o == lbl_o)
+            #print(LBLGT_s)
+            #print(lbl_s)
+            #print(valid_mask)
+            #print(valid_mask.any())
             if valid_mask.any():
-                if rel_or_phr:  # means it is evaluating relationships
-                    # 1 x num_gt
-                    overlaps_s = bbox_overlaps(
-                        bb_s[None, :].astype(dtype=np.float32, copy=False),
-                        BBGT_s.astype(dtype=np.float32, copy=False))[0]
-                    overlaps_o = bbox_overlaps(
-                        bb_o[None, :].astype(dtype=np.float32, copy=False),
-                        BBGT_o.astype(dtype=np.float32, copy=False))[0]
-                    overlaps = np.minimum(overlaps_s, overlaps_o)
-                else:
-                    overlaps = bbox_overlaps(
-                        bb_r[None, :].astype(dtype=np.float32, copy=False),
-                        BBGT_r.astype(dtype=np.float32, copy=False))[0]
-                overlaps *= valid_mask
-                # find the best matching relatioships
-                ovmax = np.max(overlaps)
-                jmax = np.argmax(overlaps)
-            else:
-                ovmax = 0.
-                jmax = -1
-
-        if ovmax > ovthresh:
-            assert jmax >= 0
-            if not visited[jmax]:
-                # tp.append(1.)
-                # fp.append(0.)
+                jmax = np.where(valid_mask==True)[0]
+                assert len(jmax) == 1
+                jmax = jmax[0]
+            
                 tp[rank_idx] = 1.
-                visited[jmax] = 1
-            else:
+                fp[rank_idx] = 0.
+                if not visited[jmax]:
+                    tp_recall[rank_idx] = 1.
+                    visited[jmax] = 1
+                    
+                    
+#            visited[jmax] = 1
+#            else:
                 # fp.append(1.)
                 # tp.append(0.)
-                repeat_hit_num += 1
-                fp[rank_idx] = 1.
+#                repeat_hit_num += 1
+#                fp[rank_idx] = 1.
 
-        else:
+            else:
             # fp.append(1.)
             # tp.append(0.)
-            fp[rank_idx] = 1.
-            y_test[rank_idx] = 0
+                fp[rank_idx] = 1.
+                tp[rank_idx] = 0.
+                y_test[rank_idx] = 0
 
     # add missed_gt
     missed_gt_num = 0
@@ -955,10 +947,14 @@ def ap_eval(image_ids,
     if npos > 0:
         acc_FP = np.cumsum(fp)
         acc_TP = np.cumsum(tp)
+        acc_TP_recall = np.cumsum(tp_recall)
+        #print("fp", len(fp))
+        #print("tp", len(tp))
 
         # ground truth
-        rec = acc_TP / (npos + 1e-12)
+        rec = acc_TP_recall / (npos + 1e-12)
         prec = acc_TP / np.maximum(acc_TP + acc_FP, np.finfo(np.float64).eps)
+        #print("11111", prec)
 
         ap = get_ap(rec, prec)
         # print(repeat_hit_num)
