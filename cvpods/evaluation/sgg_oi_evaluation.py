@@ -417,7 +417,7 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
 
     # here we only takes the evaluation option of openimages
     if post_proc:
-        prd_k = 6
+        prd_k = 5
     else:
         prd_k = 1
 
@@ -906,7 +906,7 @@ def ap_eval(image_ids,
             #print(valid_mask.any())
             if valid_mask.any():
                 jmax = np.where(valid_mask==True)[0]
-                print(jmax)
+                #print(jmax)
                 assert len(jmax) == 1
                 jmax = jmax[0]
             
