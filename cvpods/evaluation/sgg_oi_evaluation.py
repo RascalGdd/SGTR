@@ -400,7 +400,7 @@ class OpenImageSGGEvaluator(VisualGenomeSGGEvaluator):
 def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_proc=True):
     logger.info('openimage evaluation: \n')
 
-    topk = 500
+    topk = 20
 
     # if cfg.TEST.DATASETS[0].find('vg') >= 0:
     #     eval_per_img = True
@@ -417,7 +417,7 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
 
     # here we only takes the evaluation option of openimages
     if post_proc:
-        prd_k = 5
+        prd_k = 2
     else:
         prd_k = 1
 
