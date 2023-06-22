@@ -417,7 +417,7 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
 
     # here we only takes the evaluation option of openimages
     if post_proc:
-        prd_k = 2
+        prd_k = 1
     else:
         prd_k = 1
 

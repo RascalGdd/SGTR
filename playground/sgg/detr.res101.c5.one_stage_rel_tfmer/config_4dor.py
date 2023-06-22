@@ -41,7 +41,7 @@ _config_dict = dict(
         WEIGHTS="/cluster/work/cvl/denfan/diandian/SGTR/weights_backbone/detr_oiv6.pth",
 
         # TEST_WEIGHTS="/home/allen/MI-projects/SGTR/weights_test/sgtr_oiv6_new/model_0107999.pth",
-        TEST_WEIGHTS="/cluster/work/cvl/denfan/diandian/SGTR/CVPODS_output/2023-06-15_13-53-4dor-SGTR-rel_dec-6/model_final.pth",
+        TEST_WEIGHTS="/cluster/work/cvl/denfan/diandian/SGTR/CVPODS_output/old/model_final.pth",
 
         RESNETS=dict(
             DEPTH=101,
@@ -125,7 +125,7 @@ _config_dict = dict(
 
             AUX_LOSS_WEIGHT=aux_loss_weight,
 
-            NUM_QUERIES=60,   # 180    4D-OR has less number of objects
+            NUM_QUERIES=20,   # 180    4D-OR has less number of objects
 
             COST_CLASS=1.0,
             COST_REL_VEC=1.0,
