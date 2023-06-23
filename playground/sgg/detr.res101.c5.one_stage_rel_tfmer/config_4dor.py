@@ -125,7 +125,7 @@ _config_dict = dict(
 
             AUX_LOSS_WEIGHT=aux_loss_weight,
 
-            NUM_QUERIES=20,   # 180    4D-OR has less number of objects
+            NUM_QUERIES=60,   # 180    4D-OR has less number of objects
 
             COST_CLASS=1.0,
             COST_REL_VEC=1.0,
