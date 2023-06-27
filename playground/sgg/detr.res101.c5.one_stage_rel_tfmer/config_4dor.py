@@ -125,7 +125,7 @@ _config_dict = dict(
 
             AUX_LOSS_WEIGHT=aux_loss_weight,
 
-            NUM_QUERIES=20,   # 180    4D-OR has less number of objects
+            NUM_QUERIES=60,   # 180    4D-OR has less number of objects
 
             COST_CLASS=1.0,
             COST_REL_VEC=1.0,
@@ -212,9 +212,9 @@ _config_dict = dict(
             NAME="WarmupMultiStepLR",
             GAMMA=0.1,
             MAX_EPOCH=None,
-            MAX_ITER=52000,     # 4d-or train_num:4024, 4024/4=503     503*50=25150  ==> 26000
-            WARMUP_ITERS=600,
-            STEPS=(10000, 24000),
+            MAX_ITER=26000,     # 4d-or train_num:4024, 4024/4=503     503*50=25150  ==> 26000
+            WARMUP_ITERS=300,
+            STEPS=(5000, 12000),
         ),
         OPTIMIZER=dict(
             NAME="DETRAdamWBuilder",
