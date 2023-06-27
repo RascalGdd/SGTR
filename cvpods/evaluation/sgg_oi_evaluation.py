@@ -448,6 +448,14 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
                 det_scores_top_spt = np.zeros(0, dtype=np.float32)
         else:
             det_boxes_sbj = res['sbj_boxes']  # (#num_rel, 4)
+            for i in range(det_boxes_sbj.shape[0]):
+                num = 0
+                src = det_boxes_sbj[i]
+                for j in range(det_boxes_sbj.shape[0]):
+                    if det_boxes_sbj[j] == src:
+                        num += 1
+                print("num=", num)
+
             det_boxes_obj = res['obj_boxes']  # (#num_rel, 4)
             det_labels_sbj = res['sbj_labels']  # (#num_rel,)
             det_labels_obj = res['obj_labels']  # (#num_rel,)
