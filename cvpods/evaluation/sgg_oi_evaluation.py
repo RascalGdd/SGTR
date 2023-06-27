@@ -447,15 +447,24 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
             if 'prd_scores_spt' in res:
                 det_scores_top_spt = np.zeros(0, dtype=np.float32)
         else:
-            det_boxes_sbj = res['sbj_boxes']  # (#num_rel, 4)
-            for i in range(det_boxes_sbj.shape[0]):
-                num = 0
-                src = det_boxes_sbj[i]
-                for j in range(det_boxes_sbj.shape[0]):
-                    if det_boxes_sbj[j] == src:
-                        num += 1
-                print("num=", num)
+            filtered_preds = []
+            filtered_classes = []
+            det_all_boxes = res['all_boxes']   # (100, 4)
+            det_all_labels = res['all_boxes']  # (100, )
+            det_all_scores = res['all_boxes']  # (100, )
+            unique_classes = np.unique(det_all_labels)
+            for unique_class in unique_classes:
+                class_mask = det_all_labels == unique_class
+                max_idx = det_all_scores[class_mask].argmax()
+                filtered_preds.append(det_all_boxes[class_mask][max_idx])
+                filtered_classes.append(unique_class)
 
+            classes = np.asarray(filtered_classes)
+            preds = np.asarray(filtered_preds)
+            print(preds.shape)
+
+
+            det_boxes_sbj = res['sbj_boxes']  # (#num_rel, 4)
             det_boxes_obj = res['obj_boxes']  # (#num_rel, 4)
             det_labels_sbj = res['sbj_labels']  # (#num_rel,)
             det_labels_obj = res['obj_labels']  # (#num_rel,)
@@ -757,7 +766,10 @@ def adapt_results(groudtruths, predictions, ):
                            gt_obj_boxes=obj_gt_boxes,
                            gt_sbj_labels=sbj_gt_classes.astype(np.int32, copy=False),
                            gt_obj_labels=obj_gt_classes.astype(np.int32, copy=False),
-                           gt_prd_labels=prd_gt_classes.astype(np.int32, copy=False))
+                           gt_prd_labels=prd_gt_classes.astype(np.int32, copy=False),
+                           all_boxes=pred_boxlist.bbox.numpy(),
+                           all_labels=pred_ent_labels.numpy(),
+                           all_scores=pred_ent_scores.numpy())
 
         packed_results.append(return_dict)
 

@@ -2,4 +2,4 @@
 
 export OMP_NUM_THREADS=1
 
-python3 /cluster/work/cvl/denfan/diandian/SGTR/tools/debug_net.py $@
+python3 D:\DD\SGTR\tools\debug_net.py $@
