@@ -450,8 +450,8 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
             filtered_preds = []
             filtered_classes = []
             det_all_boxes = res['all_boxes']   # (100, 4)
-            det_all_labels = res['all_boxes']  # (100, )
-            det_all_scores = res['all_boxes']  # (100, )
+            det_all_labels = res['all_labels']  # (100, )
+            det_all_scores = res['all_scores']  # (100, )
             unique_classes = np.unique(det_all_labels)
             for unique_class in unique_classes:
                 class_mask = det_all_labels == unique_class
@@ -461,7 +461,7 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
 
             classes = np.asarray(filtered_classes)
             preds = np.asarray(filtered_preds)
-            print(preds.shape)
+            one2one = True
 
 
             det_boxes_sbj = res['sbj_boxes']  # (#num_rel, 4)
@@ -475,8 +475,27 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
             rel_prd_score = res['prd_rel_score']
             rel_trp_prd_scores = res['prd_trp_score']
             # pred_rel_pair_idxs = res['pred_rel_pair_idxs']
-            
-            #print("11111111", len(res['prd_scores_dist']))
+
+            res = []
+            if one2one:
+                for k in range(det_boxes_sbj.shape[0]):
+                    if det_boxes_sbj[k] not in filtered_preds or det_boxes_obj[k] not in filtered_preds:
+                        continue
+                    else:
+                        res.append(k)
+
+                det_boxes_sbj = det_boxes_sbj[res]  # (#num_rel, 4)
+                det_boxes_obj = det_boxes_obj[res]  # (#num_rel, 4)
+                det_labels_sbj = det_labels_sbj[res]  # (#num_rel,)
+                det_labels_obj = det_labels_obj[res]  # (#num_rel,)
+                det_scores_sbj = det_scores_sbj[res]  # (#num_rel,)
+                det_scores_obj = det_scores_obj[res]  # (#num_rel,)
+                rel_prd_score_dist = rel_prd_score_dist[res]
+                rel_prd_labels = rel_prd_labels[res]
+                rel_prd_score = rel_prd_score[res]
+                rel_trp_prd_scores = rel_trp_prd_scores[res]
+
+            post_proc = False
 
             if post_proc:
                 # take out the predicates classification score
@@ -523,13 +542,13 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
 
                 # non other post process, just use the rank of predictions
                 # directly take the topk prediction results
-                det_scores_top = rel_trp_prd_scores[:topk]
-                det_boxes_so_top = np.hstack((det_boxes_sbj[:topk],
-                                              det_boxes_obj[:topk]))
-                det_labels_p_top = rel_prd_labels[:topk] - 1  # start from 0
+                det_scores_top = rel_trp_prd_scores
+                det_boxes_so_top = np.hstack((det_boxes_sbj,
+                                              det_boxes_obj))
+                det_labels_p_top = rel_prd_labels - 1  # start from 0
 
                 det_labels_spo_top = np.vstack(
-                    (det_labels_sbj[:topk], det_labels_p_top, det_labels_obj[:topk])).transpose()
+                    (det_labels_sbj, det_labels_p_top, det_labels_obj)).transpose()
 
             det_boxes_s_top = det_boxes_so_top[:, :4]
             det_boxes_o_top = det_boxes_so_top[:, 4:]
