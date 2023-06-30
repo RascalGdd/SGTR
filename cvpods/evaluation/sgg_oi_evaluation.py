@@ -456,7 +456,7 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
             nms = True
 
             if nms:
-                keep = nms_cpu(dets=det_all_boxes, scores=det_all_scores, thresh=0.6)
+                keep = nms_cpu(dets=det_all_boxes, scores=det_all_scores, thresh=0.7)
                 det_all_boxes = det_all_boxes[keep]
                 det_all_labels = det_all_labels[keep]
                 det_all_scores = det_all_scores[keep]
@@ -465,6 +465,7 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
 
 
             unique_classes = np.unique(det_all_labels)
+            print("unique classes", unique_classes)
             for unique_class in unique_classes:
                 class_mask = det_all_labels == unique_class
                 max_idx = det_all_scores[class_mask].argmax()
@@ -500,23 +501,23 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
                     else:
                         save.append(k)
 
-                    det_boxes_sbj = det_boxes_sbj[save]  # (#num_rel, 4)
-                    det_boxes_obj = det_boxes_obj[save]  # (#num_rel, 4)
-                    det_labels_sbj = det_labels_sbj[save]  # (#num_rel,)
-                    det_labels_obj = det_labels_obj[save]  # (#num_rel,)
-                    det_scores_sbj = det_scores_sbj[save]  # (#num_rel,)
-                    det_scores_obj = det_scores_obj[save]  # (#num_rel,)
-                    rel_prd_score_dist = rel_prd_score_dist[save]
-                    rel_prd_labels = rel_prd_labels[save]
-                    rel_prd_score = rel_prd_score[save]
-                    rel_trp_prd_scores = rel_trp_prd_scores[save]
+                det_boxes_sbj = det_boxes_sbj[save]  # (#num_rel, 4)
+                det_boxes_obj = det_boxes_obj[save]  # (#num_rel, 4)
+                det_labels_sbj = det_labels_sbj[save]  # (#num_rel,)
+                det_labels_obj = det_labels_obj[save]  # (#num_rel,)
+                det_scores_sbj = det_scores_sbj[save]  # (#num_rel,)
+                det_scores_obj = det_scores_obj[save]  # (#num_rel,)
+                rel_prd_score_dist = rel_prd_score_dist[save]
+                rel_prd_labels = rel_prd_labels[save]
+                rel_prd_score = rel_prd_score[save]
+                rel_trp_prd_scores = rel_trp_prd_scores[save]
 
-                    print("after unique")
-                    print(det_boxes_sbj.shape)
-                    print(det_boxes_obj.shape)
-                    print(det_labels_sbj.shape)
-                    print(rel_prd_score_dist.shape)
-                    print(rel_trp_prd_scores.shape)
+                print("after unique")
+                print(det_boxes_sbj.shape)
+                print(det_boxes_obj.shape)
+                print(det_labels_sbj.shape)
+                print(rel_prd_score_dist.shape)
+                print(rel_trp_prd_scores.shape)
 
             post_proc = False
 
