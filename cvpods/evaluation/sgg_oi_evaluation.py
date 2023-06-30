@@ -452,6 +452,18 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
             det_all_boxes = res['all_boxes']   # (100, 4)
             det_all_labels = res['all_labels']  # (100, )
             det_all_scores = res['all_scores']  # (100, )
+
+            nms = True
+
+            if nms:
+                keep = nms_cpu(dets=det_all_boxes, scores=det_all_scores, thresh=0.6)
+                det_all_boxes = det_all_boxes[keep]
+                det_all_labels = det_all_labels[keep]
+                det_all_scores = det_all_scores[keep]
+            print("after nms", det_all_boxes.shape)
+
+
+
             unique_classes = np.unique(det_all_labels)
             for unique_class in unique_classes:
                 class_mask = det_all_labels == unique_class
@@ -480,32 +492,31 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
             rel_trp_prd_scores = res['prd_trp_score']
             # pred_rel_pair_idxs = res['pred_rel_pair_idxs']
 
-            res = []
             if one2one:
+                save = []
                 for k in range(det_boxes_sbj.shape[0]):
-                    print("det_boxes_sbj[k]", list(det_boxes_sbj[k]))
-                    print("filtered_preds", filtered_preds)
                     if list(det_boxes_sbj[k]) not in filtered_preds_list or list(det_boxes_obj[k]) not in filtered_preds_list:
                         continue
                     else:
-                        res.append(k)
+                        save.append(k)
 
-                det_boxes_sbj = det_boxes_sbj[res]  # (#num_rel, 4)
-                det_boxes_obj = det_boxes_obj[res]  # (#num_rel, 4)
-                det_labels_sbj = det_labels_sbj[res]  # (#num_rel,)
-                det_labels_obj = det_labels_obj[res]  # (#num_rel,)
-                det_scores_sbj = det_scores_sbj[res]  # (#num_rel,)
-                det_scores_obj = det_scores_obj[res]  # (#num_rel,)
-                rel_prd_score_dist = rel_prd_score_dist[res]
-                rel_prd_labels = rel_prd_labels[res]
-                rel_prd_score = rel_prd_score[res]
-                rel_trp_prd_scores = rel_trp_prd_scores[res]
-                
-                # print(det_boxes_sbj.shape)
-                # print(det_boxes_obj.shape)
-                # print(det_labels_sbj.shape)
-                # print(rel_prd_score_dist.shape)
-                # print(rel_trp_prd_scores.shape)
+                    det_boxes_sbj = det_boxes_sbj[save]  # (#num_rel, 4)
+                    det_boxes_obj = det_boxes_obj[save]  # (#num_rel, 4)
+                    det_labels_sbj = det_labels_sbj[save]  # (#num_rel,)
+                    det_labels_obj = det_labels_obj[save]  # (#num_rel,)
+                    det_scores_sbj = det_scores_sbj[save]  # (#num_rel,)
+                    det_scores_obj = det_scores_obj[save]  # (#num_rel,)
+                    rel_prd_score_dist = rel_prd_score_dist[save]
+                    rel_prd_labels = rel_prd_labels[save]
+                    rel_prd_score = rel_prd_score[save]
+                    rel_trp_prd_scores = rel_trp_prd_scores[save]
+
+                    print("after unique")
+                    print(det_boxes_sbj.shape)
+                    print(det_boxes_obj.shape)
+                    print(det_labels_sbj.shape)
+                    print(rel_prd_score_dist.shape)
+                    print(rel_trp_prd_scores.shape)
 
             post_proc = False
 
@@ -1073,12 +1084,11 @@ def _compute_pred_matches(gt_triplets, pred_triplets,
     return pred_to_gt
 
 
-def nms_cpu(dets, thresh):
+def nms_cpu(dets, scores, thresh):
     x1 = dets[:, 0]
     y1 = dets[:, 1]
     x2 = dets[:, 2]
     y2 = dets[:, 3]
-    scores = dets[:, 4]
 
     areas = (x2 - x1 + 1) * (y2 - y1 + 1)
     order = scores.argsort()[::-1]
