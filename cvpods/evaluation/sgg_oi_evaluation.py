@@ -461,6 +461,10 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
 
             classes = np.asarray(filtered_classes)
             preds = np.asarray(filtered_preds)
+
+            filtered_preds_list = [list(item) for item in filtered_preds]
+            filtered_classes_list = [list(item) for item in filtered_classes]
+
             one2one = True
 
 
@@ -481,7 +485,7 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
                 for k in range(det_boxes_sbj.shape[0]):
                     print("det_boxes_sbj[k]", list(det_boxes_sbj[k]))
                     print("filtered_preds", filtered_preds)
-                    if list(det_boxes_sbj[k]) not in filtered_preds or list(det_boxes_obj[k]) not in filtered_preds:
+                    if list(det_boxes_sbj[k]) not in filtered_preds_list or list(det_boxes_obj[k]) not in filtered_preds_list:
                         continue
                     else:
                         res.append(k)
@@ -497,11 +501,11 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
                 rel_prd_score = rel_prd_score[res]
                 rel_trp_prd_scores = rel_trp_prd_scores[res]
                 
-                print(det_boxes_sbj.shape)
-                print(det_boxes_obj.shape)
-                print(det_labels_sbj.shape)
-                print(rel_prd_score_dist.shape)
-                print(rel_trp_prd_scores.shape)
+                # print(det_boxes_sbj.shape)
+                # print(det_boxes_obj.shape)
+                # print(det_labels_sbj.shape)
+                # print(rel_prd_score_dist.shape)
+                # print(rel_trp_prd_scores.shape)
 
             post_proc = False
 
