@@ -453,7 +453,7 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
             det_all_labels = res['all_labels']  # (100, )
             det_all_scores = res['all_scores']  # (100, )
 
-            nms = False
+            nms = True
             one2one = True
 
             if nms:
