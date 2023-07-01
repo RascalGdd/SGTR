@@ -453,7 +453,8 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
             det_all_labels = res['all_labels']  # (100, )
             det_all_scores = res['all_scores']  # (100, )
 
-            nms = True
+            nms = False
+            one2one = True
 
             if nms:
                 keep = nms_cpu(dets=det_all_boxes, scores=det_all_scores, thresh=0.7)
@@ -477,9 +478,6 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
 
             filtered_preds_list = [list(item) for item in filtered_preds]
             # filtered_classes_list = [list(item) for item in filtered_classes]
-
-            one2one = True
-
 
             det_boxes_sbj = res['sbj_boxes']  # (#num_rel, 4)
             det_boxes_obj = res['obj_boxes']  # (#num_rel, 4)
