@@ -18,7 +18,7 @@ _config_dict = dict(
     DEBUG=False,
     DUMP_INTERMEDITE=False,
 
-    EXPERIMENT_NAME=f"4dor-SGTR-rel_dec-{rel_dec_layer}",
+    EXPERIMENT_NAME=f"best_with_nms_with_unique",
     # the program will use this config to uptate the initial config(over write the existed, ignore doesnt existed)
     OVERIDE_CFG_DIR="",
 
@@ -41,7 +41,7 @@ _config_dict = dict(
         WEIGHTS="/cluster/work/cvl/denfan/diandian/SGTR/weights_backbone/detr_oiv6.pth",
 
         # TEST_WEIGHTS="/home/allen/MI-projects/SGTR/weights_test/sgtr_oiv6_new/model_0107999.pth",
-        TEST_WEIGHTS="/cluster/work/cvl/denfan/diandian/SGTR/CVPODS_output/old/model_final.pth",
+        TEST_WEIGHTS="/cluster/work/cvl/denfan/diandian/SGTR/CVPODS_output/best/model_final.pth",
 
         RESNETS=dict(
             DEPTH=101,
