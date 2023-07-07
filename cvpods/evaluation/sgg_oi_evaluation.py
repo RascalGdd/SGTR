@@ -461,12 +461,12 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
                 det_all_boxes = det_all_boxes[keep]
                 det_all_labels = det_all_labels[keep]
                 det_all_scores = det_all_scores[keep]
-            print("after nms", det_all_boxes.shape)
+            # print("after nms", det_all_boxes.shape)
 
 
 
             unique_classes = np.unique(det_all_labels)
-            print("unique classes", unique_classes)
+            # print("unique classes", unique_classes)
             for unique_class in unique_classes:
                 class_mask = det_all_labels == unique_class
                 max_idx = det_all_scores[class_mask].argmax()
@@ -494,6 +494,8 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
             print("rel_prd_labels")
             print(rel_prd_labels.shape)
             print(np.unique(rel_prd_labels))
+            # rel_det_scores_prd = rel_prd_score_dist[:, 1:]  # N x C (the prediction score of each categories)
+            print(np.argsort(-rel_prd_score[:, 1:], axis=1))
 
             if one2one:
                 save = []
