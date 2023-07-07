@@ -491,6 +491,10 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
             rel_trp_prd_scores = res['prd_trp_score']
             # pred_rel_pair_idxs = res['pred_rel_pair_idxs']
 
+            print("rel_prd_labels")
+            print(rel_prd_labels.shape)
+            print(np.unique(rel_prd_labels))
+
             if one2one:
                 save = []
                 for k in range(det_boxes_sbj.shape[0]):
@@ -510,12 +514,12 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
                 rel_prd_score = rel_prd_score[save]
                 rel_trp_prd_scores = rel_trp_prd_scores[save]
 
-                print("after unique")
-                print(det_boxes_sbj.shape)
-                print(det_boxes_obj.shape)
-                print(det_labels_sbj.shape)
-                print(rel_prd_score_dist.shape)
-                print(rel_trp_prd_scores.shape)
+                # print("after unique")
+                # print(det_boxes_sbj.shape)
+                # print(det_boxes_obj.shape)
+                # print(det_labels_sbj.shape)
+                # print(rel_prd_score_dist.shape)
+                # print(rel_trp_prd_scores.shape)
 
             post_proc = False
 
