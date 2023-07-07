@@ -493,14 +493,17 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
 
             print("rel_prd_labels")
             print(rel_prd_labels.shape)
+            print(rel_prd_score.shape)
+            print(rel_trp_prd_scores.shape)
+            print(rel_prd_score_dist.shape)
             # rel_det_scores_prd = rel_prd_score_dist[:, 1:]  # N x C (the prediction score of each categories)
             # print(np.argsort(-rel_prd_score[:, 1:], axis=1))
             # print("compare 1")
             # print(np.unique(rel_prd_labels - np.argsort(-rel_prd_score[:, 1:], axis=1)))
-            print("compare 2")
-            print(np.unique(rel_prd_labels - np.argsort(-rel_prd_score_dist[:, 1:], axis=1)))
-            print("compare 3")
-            print(np.unique(rel_prd_labels - np.argsort(-rel_trp_prd_scores[:, 1:], axis=1)))
+            print("compare")
+            print(np.unique(rel_prd_labels - np.argsort(-rel_prd_score_dist[:, 1:], axis=0)))
+            # print("compare 3")
+            # print(np.unique(rel_prd_labels - np.argsort(-rel_trp_prd_scores[:, 1:], axis=1)))
 
 
             if one2one:
