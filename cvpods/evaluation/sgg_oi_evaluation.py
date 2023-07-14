@@ -4,7 +4,7 @@ import io
 import logging
 from collections import OrderedDict
 from functools import reduce
-
+from sklearn.metrics import classification_report
 import numpy as np
 from pycocotools.coco import COCO
 from pycocotools.cocoeval import COCOeval
@@ -607,7 +607,6 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
         for index in range(gt_labels_spo.shape[0]):
             found = False
             if (gt_labels_spo[index][0], gt_labels_spo[index][2]) not in gt_pair_collection:
-                print(type(gt_labels_spo[index][0]))
                 gt_pair_collection.append((gt_labels_spo[index][0], gt_labels_spo[index][2]))
                 or_gt_img.append(gt_labels_spo[index][1])
                 for idx in range(det_labels_spo_top.shape[0]):
@@ -617,10 +616,15 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
                         break
                 if not found:
                     or_pred_img.append(None)
-        print("or_gt_img", len(or_gt_img))
-        print(or_gt_img)
-        print("or_pred_img", len(or_pred_img))
-        print(or_pred_img)
+        # print("or_gt_img", len(or_gt_img))
+        # print(or_gt_img)
+        # print("or_pred_img", len(or_pred_img))
+        # print(or_pred_img)
+
+
+        OR_GT.extend(or_gt_img)
+        OR_PRED.extend(or_pred_img)
+
 
         # or_pred_img = [None for i in or_gt_img]
 
@@ -634,6 +638,9 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
         #     if (det_labels_spo_top[idx][0], det_labels_spo_top[idx][1]) in gt_pair_collection and (det_labels_spo_top[idx][0], det_labels_spo_top[idx][1]) not in pred_pair_collection:
         #         pred_pair_collection
 
+    cls_report = classification_report(OR_GT, OR_PRED,
+                                       target_names=["Assisting", "Cementing", "Cleaning", "CloseTo", "Cutting", "Drilling", "Hammering", "Holding", "LyingOn", "Operating", "Preparing", "Sawing", "Suturing", "Touching"], output_dict=True)
+    print(cls_report)
 
     predicate_cls_list_woBG = predicate_cls_list[1:]  # remove the background categoires
     for k in recalls_per_img.keys():
