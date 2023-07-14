@@ -615,7 +615,7 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
                         found = True
                         break
                 if not found:
-                    or_pred_img.append(None)
+                    or_pred_img.append(14)
         # print("or_gt_img", len(or_gt_img))
         # print(or_gt_img)
         # print("or_pred_img", len(or_pred_img))
@@ -639,7 +639,7 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
         #         pred_pair_collection
 
     cls_report = classification_report(OR_GT, OR_PRED,
-                                       target_names=["Assisting", "Cementing", "Cleaning", "CloseTo", "Cutting", "Drilling", "Hammering", "Holding", "LyingOn", "Operating", "Preparing", "Sawing", "Suturing", "Touching"], output_dict=True)
+                                       target_names=["Assisting", "Cementing", "Cleaning", "CloseTo", "Cutting", "Drilling", "Hammering", "Holding", "LyingOn", "Operating", "Preparing", "Sawing", "Suturing", "Touching", "None"], output_dict=True)
     print(cls_report)
 
     predicate_cls_list_woBG = predicate_cls_list[1:]  # remove the background categoires
