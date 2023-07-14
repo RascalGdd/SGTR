@@ -426,6 +426,10 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
     all_gt_cnt = 0
 
     topk_dets = []
+
+    OR_GT = []
+    OR_PRED = []
+
     for im_i, res in enumerate(tqdm(all_results)):
 
         # in oi_all_rel some images have no dets
@@ -595,11 +599,15 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
                                   gt_labels_prd=gt_labels_prd))
 
 
+
+
         gt_pair_collection = []
         pred_pair_collection = []
         for index in range(gt_labels_spo.shape[0]):
-            if (gt_labels_spo[index][0], gt_labels_spo[index][1]) not in gt_pair_collection:
-                gt_pair_collection.append((gt_labels_spo[index][0], gt_labels_spo[index][1]))
+            if (gt_labels_spo[index][0], gt_labels_spo[index][2]) not in gt_pair_collection:
+                print(type(gt_labels_spo[index][0]))
+                gt_pair_collection.append((gt_labels_spo[index][0], gt_labels_spo[index][2]))
+                OR_GT.append(gt_labels_spo[index][1])
             else:
                 print("repeated gt relationship with same so pair!")
                 error
