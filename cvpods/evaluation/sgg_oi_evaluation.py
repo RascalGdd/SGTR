@@ -517,6 +517,11 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
             det_labels_s_top = det_labels_spo_top[:, 0]
             det_labels_p_top = det_labels_spo_top[:, 1]
             det_labels_o_top = det_labels_spo_top[:, 2]
+            det_scores_top = det_scores_top
+            print(det_scores_top)
+            print(det_labels_spo_top)
+
+            # for index in range(det_labels_s_top.shape[0]):
 
             print("det_boxes_s_top", det_boxes_s_top.shape)
             print("det_boxes_o_top", det_boxes_o_top.shape)
