@@ -400,7 +400,7 @@ class OpenImageSGGEvaluator(VisualGenomeSGGEvaluator):
 def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_proc=True):
     logger.info('openimage evaluation: \n')
 
-    topk = 100
+    topk = 200
 
     # if cfg.TEST.DATASETS[0].find('vg') >= 0:
     #     eval_per_img = True
@@ -417,7 +417,7 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
 
     # here we only takes the evaluation option of openimages
     if post_proc:
-        prd_k = 2
+        prd_k = 1
     else:
         prd_k = 1
 
@@ -517,6 +517,15 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
             det_labels_s_top = det_labels_spo_top[:, 0]
             det_labels_p_top = det_labels_spo_top[:, 1]
             det_labels_o_top = det_labels_spo_top[:, 2]
+
+            print("det_boxes_s_top", det_boxes_s_top.shape)
+            print("det_boxes_o_top", det_boxes_o_top.shape)
+            print("det_labels_s_top", det_labels_s_top.shape)
+            print("det_labels_p_top", det_labels_p_top.shape)
+            print("det_labels_o_top", det_labels_o_top.shape)
+            asd
+
+
 
         topk_dets.append(dict(image=im_i,
                               det_boxes_s_top=det_boxes_s_top,
