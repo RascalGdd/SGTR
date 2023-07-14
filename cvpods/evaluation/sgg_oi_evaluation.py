@@ -518,17 +518,14 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
             det_labels_p_top = det_labels_spo_top[:, 1]
             det_labels_o_top = det_labels_spo_top[:, 2]
             det_scores_top = det_scores_top
-            print(det_scores_top)
-            print(det_labels_spo_top)
-
-            # for index in range(det_labels_s_top.shape[0]):
-
-            print("det_boxes_s_top", det_boxes_s_top.shape)
-            print("det_boxes_o_top", det_boxes_o_top.shape)
-            print("det_labels_s_top", det_labels_s_top.shape)
-            print("det_labels_p_top", det_labels_p_top.shape)
-            print("det_labels_o_top", det_labels_o_top.shape)
-            asd
+            # print(det_scores_top)
+            # print(det_labels_spo_top)
+            #
+            # print("det_boxes_s_top", det_boxes_s_top.shape)
+            # print("det_boxes_o_top", det_boxes_o_top.shape)
+            # print("det_labels_s_top", det_labels_s_top.shape)
+            # print("det_labels_p_top", det_labels_p_top.shape)
+            # print("det_labels_o_top", det_labels_o_top.shape)
 
 
 
@@ -596,6 +593,24 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
                                   gt_labels_sbj=gt_labels_sbj,
                                   gt_labels_obj=gt_labels_obj,
                                   gt_labels_prd=gt_labels_prd))
+
+
+        gt_pair_collection = []
+        pred_pair_collection = []
+        for index in range(gt_labels_spo.shape[0]):
+            if (gt_labels_spo[index][0], gt_labels_spo[index][1]) not in gt_pair_collection:
+                gt_pair_collection.append((gt_labels_spo[index][0], gt_labels_spo[index][1]))
+            else:
+                print("repeated gt relationship with same so pair!")
+                error
+        print("gt_labels_spo", gt_labels_spo.shape)
+        print("gt_pair_collection", len(gt_pair_collection))
+
+        # for idx in range(det_labels_spo_top.shape[0]):
+        #     print(type(det_labels_spo_top[idx][0]))
+        #     if (det_labels_spo_top[idx][0], det_labels_spo_top[idx][1]) in gt_pair_collection and (det_labels_spo_top[idx][0], det_labels_spo_top[idx][1]) not in pred_pair_collection:
+        #         pred_pair_collection
+
 
     predicate_cls_list_woBG = predicate_cls_list[1:]  # remove the background categoires
     for k in recalls_per_img.keys():
