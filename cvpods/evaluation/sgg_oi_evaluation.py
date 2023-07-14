@@ -400,7 +400,7 @@ class OpenImageSGGEvaluator(VisualGenomeSGGEvaluator):
 def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_proc=True):
     logger.info('openimage evaluation: \n')
 
-    topk = 20
+    topk = 100
 
     # if cfg.TEST.DATASETS[0].find('vg') >= 0:
     #     eval_per_img = True
@@ -417,7 +417,7 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
 
     # here we only takes the evaluation option of openimages
     if post_proc:
-        prd_k = 1
+        prd_k = 2
     else:
         prd_k = 1
 
@@ -447,38 +447,6 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
             if 'prd_scores_spt' in res:
                 det_scores_top_spt = np.zeros(0, dtype=np.float32)
         else:
-            filtered_preds = []
-            filtered_classes = []
-            det_all_boxes = res['all_boxes']   # (100, 4)
-            det_all_labels = res['all_labels']  # (100, )
-            det_all_scores = res['all_scores']  # (100, )
-
-            nms = True
-            one2one = True
-
-            if nms:
-                keep = nms_cpu(dets=det_all_boxes, scores=det_all_scores, thresh=0.7)
-                det_all_boxes = det_all_boxes[keep]
-                det_all_labels = det_all_labels[keep]
-                det_all_scores = det_all_scores[keep]
-            # print("after nms", det_all_boxes.shape)
-
-
-
-            unique_classes = np.unique(det_all_labels)
-            # print("unique classes", unique_classes)
-            for unique_class in unique_classes:
-                class_mask = det_all_labels == unique_class
-                max_idx = det_all_scores[class_mask].argmax()
-                filtered_preds.append(det_all_boxes[class_mask][max_idx])
-                filtered_classes.append(unique_class)
-
-            classes = np.asarray(filtered_classes)
-            preds = np.asarray(filtered_preds)
-
-            filtered_preds_list = [list(item) for item in filtered_preds]
-            # filtered_classes_list = [list(item) for item in filtered_classes]
-
             det_boxes_sbj = res['sbj_boxes']  # (#num_rel, 4)
             det_boxes_obj = res['obj_boxes']  # (#num_rel, 4)
             det_labels_sbj = res['sbj_labels']  # (#num_rel,)
@@ -490,49 +458,6 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
             rel_prd_score = res['prd_rel_score']
             rel_trp_prd_scores = res['prd_trp_score']
             # pred_rel_pair_idxs = res['pred_rel_pair_idxs']
-
-            # print("rel_prd_labels")
-            # print(rel_prd_labels.shape)
-            # print(rel_prd_score.shape)
-            # print(rel_trp_prd_scores.shape)
-            # print(rel_prd_score_dist.shape)
-            # rel_det_scores_prd = rel_prd_score_dist[:, 1:]  # N x C (the prediction score of each categories)
-            # print(np.argsort(-rel_prd_score[:, 1:], axis=1))
-            # print("compare 1")
-            # print(np.unique(rel_prd_labels - np.argsort(-rel_prd_score[:, 1:], axis=1)))
-            print("compare")
-            print(np.unique(rel_prd_labels - np.argmax(rel_prd_score_dist[:, 1:], axis=1)))
-            # print("compare 3")
-            # print(np.unique(rel_prd_labels - np.argsort(-rel_trp_prd_scores[:, 1:], axis=1)))
-
-
-            if one2one:
-                save = []
-                for k in range(det_boxes_sbj.shape[0]):
-                    if list(det_boxes_sbj[k]) not in filtered_preds_list or list(det_boxes_obj[k]) not in filtered_preds_list:
-                        continue
-                    else:
-                        save.append(k)
-
-                det_boxes_sbj = det_boxes_sbj[save]  # (#num_rel, 4)
-                det_boxes_obj = det_boxes_obj[save]  # (#num_rel, 4)
-                det_labels_sbj = det_labels_sbj[save]  # (#num_rel,)
-                det_labels_obj = det_labels_obj[save]  # (#num_rel,)
-                det_scores_sbj = det_scores_sbj[save]  # (#num_rel,)
-                det_scores_obj = det_scores_obj[save]  # (#num_rel,)
-                rel_prd_score_dist = rel_prd_score_dist[save]
-                rel_prd_labels = rel_prd_labels[save]
-                rel_prd_score = rel_prd_score[save]
-                rel_trp_prd_scores = rel_trp_prd_scores[save]
-
-                # print("after unique")
-                # print(det_boxes_sbj.shape)
-                # print(det_boxes_obj.shape)
-                # print(det_labels_sbj.shape)
-                # print(rel_prd_score_dist.shape)
-                # print(rel_trp_prd_scores.shape)
-
-            post_proc = False
 
             if post_proc:
                 # take out the predicates classification score
@@ -579,13 +504,13 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
 
                 # non other post process, just use the rank of predictions
                 # directly take the topk prediction results
-                det_scores_top = rel_trp_prd_scores
-                det_boxes_so_top = np.hstack((det_boxes_sbj,
-                                              det_boxes_obj))
-                det_labels_p_top = rel_prd_labels - 1  # start from 0
+                det_scores_top = rel_trp_prd_scores[:topk]
+                det_boxes_so_top = np.hstack((det_boxes_sbj[:topk],
+                                              det_boxes_obj[:topk]))
+                det_labels_p_top = rel_prd_labels[:topk] - 1  # start from 0
 
                 det_labels_spo_top = np.vstack(
-                    (det_labels_sbj, det_labels_p_top, det_labels_obj)).transpose()
+                    (det_labels_sbj[:topk], det_labels_p_top, det_labels_obj[:topk])).transpose()
 
             det_boxes_s_top = det_boxes_so_top[:, :4]
             det_boxes_o_top = det_boxes_so_top[:, 4:]
@@ -686,21 +611,19 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
 
         if len(rec) == 0:
             rec = [0.0]
-        if len(prec) == 0:
-            prec = [0.0]
 
         weighted_ap = ap * float(npos[c]) / float(all_npos)
         w_rel_mAP += weighted_ap
         rel_mAP += ap
         ap_str += '{:.2f}, '.format(100 * ap)
         per_class_res += '{}: {:.3f} / {:.3f} / {:.3f} ({:.6f}:{}/{}), '.format(
-            predicate_cls_list_woBG[c], 100 * ap, 100 * prec[-1], rec[-1] * 100, float(npos[c]) / float(all_npos),
+            predicate_cls_list_woBG[c], 100 * ap, 100 * weighted_ap, rec[-1] * 100, float(npos[c]) / float(all_npos),
             npos[c], all_npos)
 
     rel_mAP /= len(predicate_cls_list_woBG)
     print("Not gt instance in categories: ", empty_cate)
     result_str += '\nrel mAP: {:.2f}, weighted rel mAP: {:.2f}\n'.format(100 * rel_mAP, 100 * w_rel_mAP)
-    result_str += 'rel AP perclass: AP/ precision / recall (weight-total_fg_propotion)\n'
+    result_str += 'rel AP perclass: AP/ weighted-AP / recall (weight-total_fg_propotion)\n'
     result_str += per_class_res + "\n\n"
     phr_mAP = 0.
     w_phr_mAP = 0.
@@ -708,26 +631,24 @@ def oi_sgg_evaluation(all_results, predicate_cls_list, result_str, logger, post_
 
     per_class_res = ''
     for c in range(len(predicate_cls_list_woBG)):
-        rec, prec, ap = ap_eval(cls_image_ids[c], cls_dets[c], cls_gts[c], npos[c], False, ovthresh=0)
+        rec, prec, ap = ap_eval(cls_image_ids[c], cls_dets[c], cls_gts[c], npos[c], False)
 
         if ap is None:
             continue
         if len(rec) == 0:
             rec = [0.0]
-        if len(prec) == 0:
-            prec = [0.0]
 
         weighted_ap = ap * float(npos[c]) / float(all_npos)
         w_phr_mAP += weighted_ap
         phr_mAP += ap
         ap_str += '{:.2f}, '.format(100 * ap)
-        per_class_res += '{}: {:.3f} / {:.3f} / {:.3f} / {:.3f} ({:.6f}:{}/{}), '.format(
-            predicate_cls_list_woBG[c], 100 * ap, 100 * weighted_ap, prec[-1] * 100, rec[-1] * 100, float(npos[c]) / float(all_npos),
+        per_class_res += '{}: {:.3f} / {:.3f} / {:.3f} ({:.6f}:{}/{}), '.format(
+            predicate_cls_list_woBG[c], 100 * ap, 100 * weighted_ap, rec[-1] * 100, float(npos[c]) / float(all_npos),
             npos[c], all_npos)
 
     phr_mAP /= len(predicate_cls_list_woBG)
     result_str += '\nphr mAP: {:.2f}, weighted phr mAP: {:.2f}\n'.format(100 * phr_mAP, 100 * w_phr_mAP)
-    result_str += 'rel AP perclass: AP/ weighted-AP /precision / recall (weight-total_fg_propotion)\n'
+    result_str += 'rel AP perclass: AP/ weighted-AP / recall (weight-total_fg_propotion)\n'
     result_str += per_class_res + "\n\n"
 
     # total: 0.4 x rel_mAP + 0.2 x R@50 + 0.4 x phr_mAP
@@ -822,10 +743,7 @@ def adapt_results(groudtruths, predictions, ):
                            gt_obj_boxes=obj_gt_boxes,
                            gt_sbj_labels=sbj_gt_classes.astype(np.int32, copy=False),
                            gt_obj_labels=obj_gt_classes.astype(np.int32, copy=False),
-                           gt_prd_labels=prd_gt_classes.astype(np.int32, copy=False),
-                           all_boxes=pred_boxlist.bbox.numpy(),
-                           all_labels=pred_ent_labels.numpy(),
-                           all_scores=pred_ent_scores.numpy())
+                           gt_prd_labels=prd_gt_classes.astype(np.int32, copy=False))
 
         packed_results.append(return_dict)
 
@@ -951,11 +869,10 @@ def ap_eval(image_ids,
 
     tp = np.zeros(num_detection)
     fp = np.zeros(num_detection)
-    tp_recall = np.zeros(num_detection)
 
     # mark the gt whether hit by other prediciton
     gt_hit_book = {k: [False] * v['gt_num'] for k, v in gts.items()}
-    # check 
+    # check
     y_test = np.zeros(num_detection)
     y_pred = confidence[sorted_ind]
 
@@ -976,35 +893,46 @@ def ap_eval(image_ids,
         LBLGT_o = gt_rel['gt_labels_obj']
         if BBGT_s.size > 0:
             valid_mask = np.logical_and(LBLGT_s == lbl_s, LBLGT_o == lbl_o)
-            #print(LBLGT_s)
-            #print(lbl_s)
-            #print(valid_mask)
-            #print(valid_mask.any())
             if valid_mask.any():
-                jmax = np.where(valid_mask==True)[0]
-                #print(jmax)
-                assert len(jmax) == 1
-                jmax = jmax[0]
-            
+                if rel_or_phr:  # means it is evaluating relationships
+                    # 1 x num_gt
+                    overlaps_s = bbox_overlaps(
+                        bb_s[None, :].astype(dtype=np.float32, copy=False),
+                        BBGT_s.astype(dtype=np.float32, copy=False))[0]
+                    overlaps_o = bbox_overlaps(
+                        bb_o[None, :].astype(dtype=np.float32, copy=False),
+                        BBGT_o.astype(dtype=np.float32, copy=False))[0]
+                    overlaps = np.minimum(overlaps_s, overlaps_o)
+                else:
+                    overlaps = bbox_overlaps(
+                        bb_r[None, :].astype(dtype=np.float32, copy=False),
+                        BBGT_r.astype(dtype=np.float32, copy=False))[0]
+                overlaps *= valid_mask
+                # find the best matching relatioships
+                ovmax = np.max(overlaps)
+                jmax = np.argmax(overlaps)
+            else:
+                ovmax = 0.
+                jmax = -1
+
+        if ovmax > ovthresh:
+            assert jmax >= 0
+            if not visited[jmax]:
+                # tp.append(1.)
+                # fp.append(0.)
                 tp[rank_idx] = 1.
-                fp[rank_idx] = 0.
-                if not visited[jmax]:
-                    tp_recall[rank_idx] = 1.
-                    visited[jmax] = 1
-                    
-                    
-#            visited[jmax] = 1
-#            else:
+                visited[jmax] = 1
+            else:
                 # fp.append(1.)
                 # tp.append(0.)
-#                repeat_hit_num += 1
-#                fp[rank_idx] = 1.
+                repeat_hit_num += 1
+                fp[rank_idx] = 1.
 
-            else:
+        else:
             # fp.append(1.)
             # tp.append(0.)
-                fp[rank_idx] = 1.
-                y_test[rank_idx] = 0
+            fp[rank_idx] = 1.
+            y_test[rank_idx] = 0
 
     # add missed_gt
     missed_gt_num = 0
@@ -1023,14 +951,10 @@ def ap_eval(image_ids,
     if npos > 0:
         acc_FP = np.cumsum(fp)
         acc_TP = np.cumsum(tp)
-        acc_TP_recall = np.cumsum(tp_recall)
-        #print("fp", len(fp))
-        #print("tp", len(tp))
 
         # ground truth
-        rec = acc_TP_recall / (npos + 1e-12)
+        rec = acc_TP / (npos + 1e-12)
         prec = acc_TP / np.maximum(acc_TP + acc_FP, np.finfo(np.float64).eps)
-        #print("11111", prec)
 
         ap = get_ap(rec, prec)
         # print(repeat_hit_num)
@@ -1096,32 +1020,3 @@ def _compute_pred_matches(gt_triplets, pred_triplets,
         for i in np.where(keep_inds)[0][inds]:
             pred_to_gt[i].append(int(gt_ind))
     return pred_to_gt
-
-
-def nms_cpu(dets, scores, thresh):
-    x1 = dets[:, 0]
-    y1 = dets[:, 1]
-    x2 = dets[:, 2]
-    y2 = dets[:, 3]
-
-    areas = (x2 - x1 + 1) * (y2 - y1 + 1)
-    order = scores.argsort()[::-1]
-
-    keep = []
-    while order.size > 0:
-        i = order.item(0)
-        keep.append(i)
-        xx1 = np.maximum(x1[i], x1[order[1:]])
-        yy1 = np.maximum(y1[i], y1[order[1:]])
-        xx2 = np.minimum(x2[i], x2[order[1:]])
-        yy2 = np.minimum(y2[i], y2[order[1:]])
-
-        w = np.maximum(0.0, xx2 - xx1 + 1)
-        h = np.maximum(0.0, yy2 - yy1 + 1)
-        inter = w * h
-        ovr = inter / (areas[i] + areas[order[1:]] - inter)
-
-        inds = np.where(ovr <= thresh)[0]
-        order = order[inds + 1]
-
-    return keep
